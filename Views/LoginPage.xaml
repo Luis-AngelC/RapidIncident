@@ -6,7 +6,7 @@
              x:DataType="viewmodels:LoginViewModel"
              Shell.NavBarIsVisible="False"
              BackgroundColor="#F5F5F5">
-
+<!--PUSH-->
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
 
