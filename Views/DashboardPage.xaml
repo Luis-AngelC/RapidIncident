@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:IncidentReportApp.ViewModels"
+             x:Class="IncidentReportApp.Views.DashboardPage"
+             x:DataType="viewmodels:DashboardViewModel"
+             Shell.NavBarIsVisible="False"   
+             BackgroundColor="#F5F5F5">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" IsEnabled="False"/>
+    </Shell.BackButtonBehavior>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Header con saludo y botón de logout -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="{Binding WelcomeMessage}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Label Text="Panel de Control"
+                               FontSize="14"
+                               TextColor="#7F8C8D"/>
+                    </VerticalStackLayout>
+
+                    <Button Grid.Column="1"
+                            Text="🚪"
+                            Command="{Binding LogoutCommand}"
+                            BackgroundColor="#E74C3C"
+                            TextColor="White"
+                            FontSize="20"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            CornerRadius="25"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+
+            <!-- Indicador de conexión -->
+            <Frame BackgroundColor="{Binding HasConnection, Converter={StaticResource BoolToColorConverter}}"
+                   CornerRadius="10"
+                   Padding="15"
+                   HasShadow="False">
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="{Binding HasConnection, Converter={StaticResource BoolToConnectionIconConverter}}"
+                           FontSize="16"
+                           VerticalOptions="Center"/>
+                    <Label Text="{Binding HasConnection, Converter={StaticResource BoolToConnectionTextConverter}}"
+                           FontSize="14"
+                           TextColor="White"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Tarjetas de Estadísticas -->
+            <Label Text="📊 Estadísticas"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#2C3E50"
+                   Margin="0,10,0,0"/>
+
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="15">
+
+                <!-- Total de Reportes -->
+                <Frame Grid.Row="0" Grid.Column="0"
+                       BackgroundColor="#3498DB"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="📝"
+                               FontSize="40"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding TotalIncidents}"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Total"
+                               FontSize="14"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Reportes Pendientes -->
+                <Frame Grid.Row="0" Grid.Column="1"
+                       BackgroundColor="#E67E22"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="⏳"
+                               FontSize="40"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding PendingIncidents}"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Pendientes"
+                               FontSize="14"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Reportes Resueltos -->
+                <Frame Grid.Row="1" Grid.Column="0"
+                       BackgroundColor="#27AE60"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="✅"
+                               FontSize="40"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding ResolvedIncidents}"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Resueltos"
+                               FontSize="14"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Reportes Sincronizados -->
+                <Frame Grid.Row="1" Grid.Column="1"
+                       BackgroundColor="#9B59B6"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="🔄"
+                               FontSize="40"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding SyncedIncidents}"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Sincronizados"
+                               FontSize="14"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </Grid>
+
+            <!-- Acciones Rápidas -->
+            <Label Text="⚡ Acciones Rápidas"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#2C3E50"
+                   Margin="0,10,0,0"/>
+
+            <!-- Botón Crear Nuevo Reporte -->
+            <Button Text="➕ Crear Nuevo Reporte"
+                    Command="{Binding CreateNewIncidentCommand}"
+                    BackgroundColor="#27AE60"
+                    TextColor="White"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="60"/>
+
+            <!-- Botón Ver Todos los Reportes -->
+            <Button Text="📋 Ver Todos los Reportes"
+                    Command="{Binding ViewAllIncidentsCommand}"
+                    BackgroundColor="#3498DB"
+                    TextColor="White"
+                    FontSize="16"
+                    CornerRadius="12"
+                    HeightRequest="55"/>
+
+            <!-- Botón Sincronizar -->
+            <Button Text="🔄 Sincronizar con API"
+                    Command="{Binding SyncIncidentsCommand}"
+                    BackgroundColor="#9B59B6"
+                    TextColor="White"
+                    FontSize="16"
+                    CornerRadius="12"
+                    HeightRequest="55"/>
+
+            <!-- Indicador de Carga -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Color="#3498DB"
+                              HeightRequest="50"
+                              Margin="0,20,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

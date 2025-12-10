@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:IncidentReportApp.ViewModels"
+             x:Class="IncidentReportApp.Views.CreateIncidentPage"
+             x:DataType="viewmodels:CreateIncidentViewModel"
+             Title="Añadir Incidencia"
+             BackgroundColor="#F5F5F5">
+
+
+    <Shell.ForegroundColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.ForegroundColor>
+
+    <Shell.TitleColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.TitleColor>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+
+            <!-- Formulario -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20">
+
+                <VerticalStackLayout Spacing="20">
+
+                    <!-- Título -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Título *"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Frame BorderColor="#BDC3C7"
+                               CornerRadius="8"
+                               Padding="0"
+                               HasShadow="False">
+                            <Entry Text="{Binding Title}"
+                                   Placeholder="Ej: Computadora no enciende"
+                                   PlaceholderColor="#95A5A6"
+                                   TextColor="#2C3E50"
+                                   FontSize="16"
+                                   MaxLength="200"
+                                   Margin="10,0"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Descripción -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Descripción *"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Frame BorderColor="#BDC3C7"
+                               CornerRadius="8"
+                               Padding="0"
+                               HasShadow="False">
+                            <Editor Text="{Binding Description}"
+                                    Placeholder="Describe el problema en detalle..."
+                                    PlaceholderColor="#95A5A6"
+                                    TextColor="#2C3E50"
+                                    FontSize="16"
+                                    HeightRequest="120"
+                                    MaxLength="1000"
+                                    Margin="10"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Categoría y Prioridad -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+
+                        <!-- Categoría -->
+                        <VerticalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="Categoría"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Frame BorderColor="#BDC3C7"
+                                   CornerRadius="8"
+                                   Padding="5"
+                                   HasShadow="False">
+                                <Picker ItemsSource="{Binding Categories}"
+                                        SelectedItem="{Binding SelectedCategory}"
+                                        FontSize="14"
+                                        TextColor="#2C3E50"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <!-- Prioridad -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="Prioridad"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Frame BorderColor="#BDC3C7"
+                                   CornerRadius="8"
+                                   Padding="5"
+                                   HasShadow="False">
+                                <Picker ItemsSource="{Binding Priorities}"
+                                        SelectedItem="{Binding SelectedPriority}"
+                                        FontSize="14"
+                                        TextColor="#2C3E50"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sección de Foto -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="📷 Fotografía"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+
+                    <!-- Preview de la foto -->
+                    <Frame IsVisible="{Binding HasPhoto}"
+                           CornerRadius="10"
+                           Padding="0"
+                           HasShadow="False"
+                           BorderColor="#3498DB">
+                        <Image Source="{Binding PhotoPath}"
+                               Aspect="AspectFill"
+                               HeightRequest="200"/>
+                    </Frame>
+
+                    <!-- Botones de foto -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                                Text="📷 Tomar"
+                                Command="{Binding TakePhotoCommand}"
+                                BackgroundColor="#3498DB"
+                                TextColor="White"
+                                FontSize="14"
+                                CornerRadius="8"
+                                HeightRequest="45"
+                                IsEnabled="{Binding IsTakingPhoto, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                        <Button Grid.Column="1"
+                                Text="🖼️ Galería"
+                                Command="{Binding PickPhotoCommand}"
+                                BackgroundColor="#9B59B6"
+                                TextColor="White"
+                                FontSize="14"
+                                CornerRadius="8"
+                                HeightRequest="45"
+                                IsEnabled="{Binding IsTakingPhoto, Converter={StaticResource InvertedBoolConverter}}"/>
+                    </Grid>
+
+                    <!-- Botón para eliminar foto -->
+                    <Button IsVisible="{Binding HasPhoto}"
+                            Text="🗑️ Eliminar foto"
+                            Command="{Binding RemovePhotoCommand}"
+                            BackgroundColor="#E74C3C"
+                            TextColor="White"
+                            FontSize="14"
+                            CornerRadius="8"
+                            HeightRequest="40"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sección de Ubicación -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="📍 Ubicación GPS"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+
+                    <!-- Información de ubicación -->
+                    <Frame BackgroundColor="#ECF0F1"
+                           CornerRadius="8"
+                           Padding="15"
+                           HasShadow="False">
+                        <Label Text="{Binding LocationText}"
+                               FontSize="14"
+                               TextColor="#34495E"
+                               HorizontalOptions="Center"/>
+                    </Frame>
+
+                    <!-- Botón para obtener ubicación -->
+                    <Button Text="📍 Obtener Ubicación Actual"
+                            Command="{Binding GetLocationCommand}"
+                            BackgroundColor="#27AE60"
+                            TextColor="White"
+                            FontSize="16"
+                            CornerRadius="8"
+                            HeightRequest="50"
+                            IsEnabled="{Binding IsGettingLocation, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                    <!-- Indicador de carga GPS -->
+                    <ActivityIndicator IsRunning="{Binding IsGettingLocation}"
+                                      IsVisible="{Binding IsGettingLocation}"
+                                      Color="#27AE60"
+                                      HeightRequest="30"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Mensaje de Error -->
+            <Frame IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                   BackgroundColor="#E74C3C"
+                   CornerRadius="10"
+                   Padding="15"
+                   HasShadow="False">
+                <Label Text="{Binding ErrorMessage}"
+                       FontSize="14"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <!-- Botones de Acción -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,20">
+
+                <Button Grid.Column="0"
+                        Text="❌ Cancelar"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="#95A5A6"
+                        TextColor="White"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="55"/>
+
+                <Button Grid.Column="1"
+                        Text="💾 Guardar"
+                        Command="{Binding SaveIncidentCommand}"
+                        BackgroundColor="#27AE60"
+                        TextColor="White"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="55"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+            </Grid>
+
+            <!-- Indicador de Carga -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Color="#27AE60"
+                              HeightRequest="50"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

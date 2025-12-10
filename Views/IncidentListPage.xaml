@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:IncidentReportApp.ViewModels"
+             xmlns:models="clr-namespace:IncidentReportApp.Models"
+             x:Class="IncidentReportApp.Views.IncidentListPage"
+             x:DataType="viewmodels:IncidentListViewModel"
+             Title="Lista de Incidencias"
+             BackgroundColor="#F5F5F5">
+
+
+    <Shell.ForegroundColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.ForegroundColor>
+
+    <Shell.TitleColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.TitleColor>
+
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Barra de búsqueda y filtros -->
+        <Frame Grid.Row="0"
+               BackgroundColor="White"
+               CornerRadius="0"
+               Padding="15"
+               HasShadow="True"
+               Margin="0">
+
+            <VerticalStackLayout Spacing="15">
+
+                <!-- Búsqueda -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Frame Grid.Column="0"
+                           BorderColor="#BDC3C7"
+                           CornerRadius="10"
+                           Padding="0"
+                           HasShadow="False">
+                        <SearchBar Text="{Binding SearchText}"
+                                   Placeholder="Buscar por título, descripción..."
+                                   PlaceholderColor="#95A5A6"
+                                   TextColor="#2C3E50"
+                                   CancelButtonColor="#3498DB"
+                                   Margin="5,0"/>
+                    </Frame>
+
+                    <Button Grid.Column="1"
+                            Text="✖"
+                            Command="{Binding ClearSearchCommand}"
+                            BackgroundColor="#E74C3C"
+                            TextColor="White"
+                            FontSize="16"
+                            WidthRequest="45"
+                            HeightRequest="45"
+                            CornerRadius="10"
+                            Margin="10,0,0,0"
+                            IsVisible="{Binding SearchText, Converter={StaticResource StringToBoolConverter}}"/>
+                </Grid>
+
+                <!-- Filtro por estado -->
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Text="Estado:"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center"
+                           Margin="0,0,10,0"/>
+
+                    <Frame Grid.Column="1"
+                           BorderColor="#BDC3C7"
+                           CornerRadius="8"
+                           Padding="5,0"
+                           HasShadow="False">
+                        <Picker ItemsSource="{Binding StatusFilters}"
+                                SelectedItem="{Binding SelectedStatusFilter}"
+                                FontSize="14"
+                                TextColor="#2C3E50"/>
+                    </Frame>
+                </Grid>
+
+                <!-- Contador -->
+                <Label Text="{Binding TotalCount, StringFormat='📊 Total: {0} incidencias'}"
+                       FontSize="13"
+                       TextColor="#7F8C8D"
+                       HorizontalOptions="End"/>
+
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Lista de incidencias -->
+        <RefreshView Grid.Row="1"
+                     Command="{Binding RefreshCommand}"
+                     IsRefreshing="{Binding IsLoading}">
+
+            <CollectionView ItemsSource="{Binding Incidents}"
+                            SelectionMode="None"
+                            EmptyView="{Binding EmptyMessage}">
+
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Incident">
+                        <SwipeView>
+                            <!-- Acciones de Swipe -->
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Eliminar"
+                                               BackgroundColor="#E74C3C"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:IncidentListViewModel}}, Path=DeleteIncidentCommand}"
+                                               CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <!-- Contenido del item -->
+                            <Frame BackgroundColor="White"
+                                   CornerRadius="12"
+                                   Padding="15"
+                                   Margin="15,5"
+                                   HasShadow="True">
+
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:IncidentListViewModel}}, Path=GoToDetailCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+
+                                    <!-- Icono de categoría -->
+                                    <Frame Grid.Column="0"
+                                           BackgroundColor="#ECF0F1"
+                                           CornerRadius="10"
+                                           Padding="12"
+                                           HasShadow="False"
+                                           WidthRequest="50"
+                                           HeightRequest="50"
+                                           VerticalOptions="Start">
+                                        <Label Text="🔧"
+                                               FontSize="24"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Frame>
+
+                                    <!-- Información -->
+                                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+
+                                        <!-- Título -->
+                                        <Label Text="{Binding Title}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2"/>
+
+                                        <!-- Descripción corta -->
+                                        <Label Text="{Binding ShortDescription}"
+                                               FontSize="13"
+                                               TextColor="#7F8C8D"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2"/>
+
+                                        <!-- Info adicional -->
+                                        <HorizontalStackLayout Spacing="10" Margin="0,5,0,0">
+                                            <Frame BackgroundColor="#3498DB"
+                                                   Padding="6,3"
+                                                   CornerRadius="5"
+                                                   HasShadow="False">
+                                                <Label Text="{Binding Category}"
+                                                       FontSize="11"
+                                                       TextColor="White"
+                                                       FontAttributes="Bold"/>
+                                            </Frame>
+
+                                            <Frame BackgroundColor="#E67E22"
+                                                   Padding="6,3"
+                                                   CornerRadius="5"
+                                                   HasShadow="False">
+                                                <Label Text="{Binding Priority}"
+                                                       FontSize="11"
+                                                       TextColor="White"
+                                                       FontAttributes="Bold"/>
+                                            </Frame>
+                                        </HorizontalStackLayout>
+
+                                        <!-- Fecha -->
+                                        <Label Text="{Binding CreatedAt, StringFormat='📅 {0:dd/MM/yyyy HH:mm}'}"
+                                               FontSize="12"
+                                               TextColor="#95A5A6"
+                                               Margin="0,3,0,0"/>
+
+                                    </VerticalStackLayout>
+
+                                    <!-- Estado e indicadores -->
+                                    <VerticalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Start">
+
+                                        <!-- Badge de estado -->
+                                        <Frame BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                               Padding="8,4"
+                                               CornerRadius="8"
+                                               HasShadow="False">
+                                            <Label Text="{Binding Status}"
+                                                   FontSize="11"
+                                                   TextColor="White"
+                                                   FontAttributes="Bold"/>
+                                        </Frame>
+
+                                        <!-- Indicador de foto -->
+                                        <Label Text="📷"
+                                               FontSize="18"
+                                               IsVisible="{Binding PhotoPath, Converter={StaticResource NullToBoolConverter}}"
+                                               HorizontalOptions="Center"/>
+
+                                        <!-- Indicador de ubicación -->
+                                        <Label Text="📍"
+                                               FontSize="18"
+                                               IsVisible="{Binding Latitude, Converter={StaticResource NullToBoolConverter}}"
+                                               HorizontalOptions="Center"/>
+
+                                        <!-- Indicador de sincronización -->
+                                        <Label Text="☁️"
+                                               FontSize="18"
+                                               IsVisible="{Binding ApiSynced}"
+                                               HorizontalOptions="Center"/>
+
+                                    </VerticalStackLayout>
+
+                                </Grid>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Botón flotante para crear nueva incidencia -->
+        <Button Grid.Row="2"
+                Text="➕ Crear Nueva Incidencia"
+                Command="{Binding CreateNewCommand}"
+                BackgroundColor="#27AE60"
+                TextColor="White"
+                FontSize="16"
+                FontAttributes="Bold"
+                CornerRadius="12"
+                HeightRequest="55"
+                Margin="20,10,20,20"/>
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="IncidentReportApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:IncidentReportApp.Views"
+    FlyoutBehavior="Disabled">
+
+    <!-- Login (sin TabBar) -->
+    <ShellContent
+        Route="LoginPage"
+        ContentTemplate="{DataTemplate views:LoginPage}" />
+
+    <!-- Dashboard será la ruta principal después del login -->
+    <!-- Lo configuraremos en el siguiente paso -->
+
+</Shell>

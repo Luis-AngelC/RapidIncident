@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Tema principal: asegura que la ventana de lanzamiento use nuestro drawable -->
+  <style name="MainTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <item name="android:windowBackground">@drawable/launch_background</item>
+  </style>
+</resources>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IncidentReportApp.Views.RegisterPage"
+             Title="Registro"
+             BackgroundColor="#F5F5F5">
+
+
+
+    <Shell.ForegroundColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.ForegroundColor>
+
+    <Shell.TitleColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.TitleColor>
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+
+            <Label Text="📝 Crear Cuenta"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#2C3E50"
+                   Margin="0,0,0,20"/>
+
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   Padding="20"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Entry x:Name="UsernameEntry"
+                           Placeholder="Nombre de usuario"
+                           FontSize="16"/>
+
+                    <Entry x:Name="PasswordEntry"
+                           Placeholder="Contraseña"
+                           IsPassword="True"
+                           FontSize="16"/>
+
+                    <Entry x:Name="FullNameEntry"
+                           Placeholder="Nombre completo"
+                           FontSize="16"/>
+
+                    <Entry x:Name="EmailEntry"
+                           Placeholder="Email"
+                           Keyboard="Email"
+                           FontSize="16"/>
+
+                    <Label x:Name="ErrorLabel"
+                           TextColor="Red"
+                           FontSize="14"
+                           IsVisible="False"
+                           HorizontalOptions="Center"/>
+
+                    <Button Text="Registrarse"
+                            Clicked="OnRegisterClicked"
+                            BackgroundColor="#27AE60"
+                            TextColor="White"
+                            FontSize="16"
+                            CornerRadius="8"
+                            HeightRequest="50"
+                            Margin="0,10,0,0"/>
+
+                    <Button Text="Ya tengo cuenta"
+                            Clicked="OnBackToLoginClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="#3498DB"
+                            FontSize="14"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

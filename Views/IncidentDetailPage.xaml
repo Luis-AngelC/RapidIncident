@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:IncidentReportApp.ViewModels"
+             x:Class="IncidentReportApp.Views.IncidentDetailPage"
+             x:DataType="viewmodels:IncidentDetailViewModel"
+             Title="{Binding PageTitle}"
+             BackgroundColor="#F5F5F5">
+
+    <Shell.ForegroundColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.ForegroundColor>
+
+    <Shell.TitleColor>
+        <OnPlatform x:TypeArguments="Color">
+            <On Platform="Android, iOS">#3498DB</On>
+        </OnPlatform>
+    </Shell.TitleColor>
+
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Header con Estado -->
+            <Frame BackgroundColor="{Binding Incident.Status, Converter={StaticResource StatusToColorConverter}}"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="{Binding Incident.Title}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               LineBreakMode="WordWrap"/>
+                        <Label Text="{Binding Incident.CreatedAt, StringFormat='Creada: {0:dd/MM/yyyy HH:mm}'}"
+                               FontSize="13"
+                               TextColor="White"
+                               Opacity="0.9"/>
+                    </VerticalStackLayout>
+
+                    <Frame Grid.Column="1"
+                           BackgroundColor="White"
+                           CornerRadius="10"
+                           Padding="12"
+                           HasShadow="False"
+                           VerticalOptions="Start">
+                        <Label Text="{Binding Incident.Status}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{Binding Incident.Status, Converter={StaticResource StatusToColorConverter}}"/>
+                    </Frame>
+                </Grid>
+            </Frame>
+
+            <!-- Información Principal -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20">
+
+                <VerticalStackLayout Spacing="20">
+
+                    <!-- Descripción -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="📝 Descripción"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+
+                        <Frame BorderColor="#BDC3C7"
+                               CornerRadius="8"
+                               Padding="12"
+                               HasShadow="False"
+                               BackgroundColor="#F8F9FA"
+                               IsVisible="{Binding IsEditing, Converter={StaticResource InvertedBoolConverter}}">
+                            <Label Text="{Binding Incident.Description}"
+                                   FontSize="14"
+                                   TextColor="#34495E"
+                                   LineBreakMode="WordWrap"/>
+                        </Frame>
+
+                        <Frame BorderColor="#3498DB"
+                               CornerRadius="8"
+                               Padding="0"
+                               HasShadow="False"
+                               IsVisible="{Binding IsEditing}">
+                            <Editor Text="{Binding Incident.Description}"
+                                    FontSize="14"
+                                    TextColor="#2C3E50"
+                                    HeightRequest="120"
+                                    Margin="10"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Categoría y Prioridad -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <VerticalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="📂 Categoría"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Frame BackgroundColor="#3498DB"
+                                   CornerRadius="8"
+                                   Padding="10"
+                                   HasShadow="False">
+                                <Label Text="{Binding Incident.Category}"
+                                       FontSize="14"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"/>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="⚠️ Prioridad"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Frame BackgroundColor="#E67E22"
+                                   CornerRadius="8"
+                                   Padding="10"
+                                   HasShadow="False">
+                                <Label Text="{Binding Incident.Priority}"
+                                       FontSize="14"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"/>
+                            </Frame>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Cambiar Estado (solo en modo edición) -->
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding IsEditing}">
+                        <Label Text="📊 Cambiar Estado"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Frame BorderColor="#3498DB"
+                               CornerRadius="8"
+                               Padding="5"
+                               HasShadow="False">
+                            <Picker ItemsSource="{Binding StatusOptions}"
+                                    SelectedItem="{Binding Incident.Status}"
+                                    FontSize="14"
+                                    TextColor="#2C3E50"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Foto -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20"
+                   IsVisible="{Binding Incident.PhotoPath, Converter={StaticResource NullToBoolConverter}}">
+
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="📷 Fotografía"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+
+                    <Frame CornerRadius="10"
+                           Padding="0"
+                           HasShadow="False"
+                           BorderColor="#3498DB">
+                        <Image Source="{Binding Incident.PhotoPath}"
+                               Aspect="AspectFill"
+                               HeightRequest="250"/>
+                    </Frame>
+
+                    <Button Text="🔍 Ver en Pantalla Completa"
+                            Command="{Binding ViewPhotoCommand}"
+                            BackgroundColor="#3498DB"
+                            TextColor="White"
+                            FontSize="14"
+                            CornerRadius="8"
+                            HeightRequest="45"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Ubicación -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20"
+                   IsVisible="{Binding Incident.Latitude, Converter={StaticResource NullToBoolConverter}}">
+
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="📍 Ubicación GPS"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+
+                    <Frame BackgroundColor="#ECF0F1"
+                           CornerRadius="8"
+                           Padding="15"
+                           HasShadow="False">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="{Binding Incident.FormattedLocation}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#34495E"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding Incident.LocationName}"
+                                   FontSize="13"
+                                   TextColor="#7F8C8D"
+                                   HorizontalOptions="Center"
+                                   IsVisible="{Binding Incident.LocationName, Converter={StaticResource NullToBoolConverter}}"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Button Text="🗺️ Abrir en Mapa"
+                            Command="{Binding ViewLocationCommand}"
+                            BackgroundColor="#27AE60"
+                            TextColor="White"
+                            FontSize="14"
+                            CornerRadius="8"
+                            HeightRequest="45"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Información Adicional -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="20">
+
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="ℹ️ Información Adicional"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           Margin="0,0,0,8"/>
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                        <Label Grid.Row="0" Grid.Column="0" Text="🆔 ID:" FontSize="14" TextColor="#7F8C8D" FontAttributes="Bold"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Incident.Id}" FontSize="14" TextColor="#2C3E50" Margin="10,0,0,0"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="📅 Creada:" FontSize="14" TextColor="#7F8C8D" FontAttributes="Bold"/>
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Incident.CreatedAt, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="14" TextColor="#2C3E50" Margin="10,0,0,0"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="🔄 Actualizada:" FontSize="14" TextColor="#7F8C8D" FontAttributes="Bold" IsVisible="{Binding Incident.UpdatedAt, Converter={StaticResource NullToBoolConverter}}"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Incident.UpdatedAt, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="14" TextColor="#2C3E50" Margin="10,0,0,0" IsVisible="{Binding Incident.UpdatedAt, Converter={StaticResource NullToBoolConverter}}"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Text="☁️ API:" FontSize="14" TextColor="#7F8C8D" FontAttributes="Bold"/>
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Incident.ApiSynced, Converter={StaticResource BoolToSyncTextConverter}}" FontSize="14" TextColor="#2C3E50" Margin="10,0,0,0"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Botones de Acción -->
+            <VerticalStackLayout Spacing="12" Margin="0,10,0,20">
+
+                <!-- Modo Vista -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding IsEditing, Converter={StaticResource InvertedBoolConverter}}">
+                    <Button Grid.Column="0"
+                            Text="✏️ Editar"
+                            Command="{Binding ToggleEditCommand}"
+                            BackgroundColor="#3498DB"
+                            TextColor="White"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="50"/>
+
+                    <Button Grid.Column="1"
+                            Text="🗑️ Eliminar"
+                            Command="{Binding DeleteCommand}"
+                            BackgroundColor="#E74C3C"
+                            TextColor="White"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="50"/>
+                </Grid>
+
+                <!-- Modo Edición -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding IsEditing}">
+                    <Button Grid.Column="0"
+                            Text="❌ Cancelar"
+                            Command="{Binding CancelEditCommand}"
+                            BackgroundColor="#95A5A6"
+                            TextColor="White"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="50"/>
+
+                    <Button Grid.Column="1"
+                            Text="💾 Guardar"
+                            Command="{Binding SaveChangesCommand}"
+                            BackgroundColor="#27AE60"
+                            TextColor="White"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="50"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <!-- Botón Sincronizar -->
+                <Button Text="🔄 Sincronizar con API"
+                        Command="{Binding SyncWithApiCommand}"
+                        BackgroundColor="#9B59B6"
+                        TextColor="White"
+                        FontSize="16"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        IsVisible="{Binding IsEditing, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                <!-- Botón Compartir -->
+                <Button Text="📤 Compartir"
+                        Command="{Binding ShareCommand}"
+                        BackgroundColor="#16A085"
+                        TextColor="White"
+                        FontSize="16"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        IsVisible="{Binding IsEditing, Converter={StaticResource InvertedBoolConverter}}"/>
+
+            </VerticalStackLayout>
+
+            <!-- Indicador de Carga -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Color="#3498DB"
+                              HeightRequest="50"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
